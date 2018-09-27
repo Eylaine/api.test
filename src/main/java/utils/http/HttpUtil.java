@@ -1,20 +1,18 @@
 package utils.http;
 
-import org.apache.http.client.HttpClient;
-
+import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.HttpResponse;
-
-import org.apache.http.client.params.ClientPNames;
-import org.apache.http.client.params.CookiePolicy;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import utils.LogUtil;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Description:
@@ -26,21 +24,10 @@ public class HttpUtil {
 
     private LogUtil logger = LogUtil.getLogger(this.getClass());
 
-    private HttpClient httpclient;
+    private CloseableHttpClient httpclient =  HttpClients.createDefault();
     private HttpGet httpGet;
     private HttpPost httpPost;
     private HttpResponse httpResponse;
-
-    /**
-     * 默认构造方法
-     */
-    public HttpUtil() {
-        PoolingClientConnectionManager pccm = new PoolingClientConnectionManager();
-        pccm.setMaxTotal(100);
-        httpclient = new DefaultHttpClient(pccm);
-        httpclient.getParams().setParameter(ClientPNames.COOKIE_POLICY, CookiePolicy.BROWSER_COMPATIBILITY);
-        httpclient.getConnectionManager().closeIdleConnections(30, TimeUnit.SECONDS);
-    }
 
     /**
      *对外接口，带header的get请求
@@ -89,13 +76,38 @@ public class HttpUtil {
     }
 
     /**
+     * 默认的headers
+     * @return
+     */
+    public Map<String, String> getCommonHeader() {
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Accept-Charset", "GBK,utf-8;q=0.7,*;q=0.3");
+        headers.put("Accept-Language", "zh-CN,zh;q=0.8");
+        headers.put("User-Agent", "QihooTest-Leo/1.0.0 Apache-HttpClient/4.2.5 (java 1.7)");
+        headers.put("Accept", "*/*");
+        headers.put("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
+        return headers;
+    }
+
+    /**
      * 设置请求头，会覆盖默认的header
      * @param httpGet
      * @param headers
      * @return
      */
     private HttpGet setGetHeader(HttpGet httpGet, Map<String, String> headers) {
-        Map<String, String> temp = new HashMap<String, String>();
+        Map<String, String> temp = getCommonHeader();
+        if (headers != null && headers.size()>0) {
+            Iterator<Map.Entry<String, String>> iteTmp = headers.entrySet().iterator();
+            while(iteTmp.hasNext()){
+                Map.Entry<?, ?> entryTmp = iteTmp.next();
+                temp.put(entryTmp.getKey().toString(), entryTmp.getValue().toString());
+            }
+        }
+        for (Map.Entry<String, String> entry : temp.entrySet()) {
+            httpGet.addHeader(entry.getKey(), entry.getValue());
+        }
+        return httpGet;
     }
 
     /**
@@ -104,7 +116,37 @@ public class HttpUtil {
      * @return
      */
     private String getResBody(HttpResponse httpResponse) {
-
+        String strResult = "";
+        if (httpResponse == null ) return strResult;
+        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+            try {
+                strResult = strResult + EntityUtils.toString(httpResponse.getEntity());
+            } catch (ParseException e) {
+                logger.error("获取body信息异常450：");
+                logger.error(e.getMessage());
+                strResult = e.getMessage();
+            } catch (IOException e) {
+                logger.error("获取body信息异常454：");
+                logger.error(e.getMessage());
+                strResult = e.getMessage();
+            }
+        } else if (httpResponse.getStatusLine().getStatusCode() == 302) {
+            String url = httpResponse.getLastHeader("Location").getValue();
+            httpResponse.setStatusCode(200);
+            strResult = url;
+            return strResult;
+        } else {
+            strResult = "Error Response:" + httpResponse.getStatusLine().toString();
+            if (httpResponse.getEntity() != null) {
+                try {
+                    httpResponse.getEntity().consumeContent();
+                } catch (IOException e) {
+                    logger.error("获取body信息异常469：");
+                    logger.error(e.getMessage());
+                }
+            }
+        }
+        return strResult;
     }
 
     /**
