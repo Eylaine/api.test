@@ -50,7 +50,7 @@ public class HttpUtil {
     }
 
     /**
-     * 私有get請求
+     * 私有方法，get請求
      * @param httpGet
      * @return
      */
