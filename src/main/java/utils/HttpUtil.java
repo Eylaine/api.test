@@ -49,6 +49,11 @@ public class HttpUtil {
         return get(url, null);
     }
 
+    /**
+     * 私有get請求
+     * @param httpGet
+     * @return
+     */
     private ResInfo get(HttpGet httpGet) {
         ResInfo resInfo = new ResInfo();
         try {
