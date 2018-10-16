@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * Description: Properties配置文件读写
+ * Description: resource properties配置文件读写
  * Date: 2018/10/3
  * User: Eylaine
  */
@@ -19,16 +19,14 @@ public class PropUtil {
 
     /**
      * 构造方法，初始化Properties对象
-     * @param filename 文件名
      */
-    public PropUtil(String filename) {
+    public PropUtil() {
         properties = new Properties();
 
         try {
-            properties.load(FileUtil.readFileToInputStream(filename));
+            properties.load(this.getClass().getResourceAsStream("/config.properties"));
         } catch (IOException e) {
             properties = null;
-            LOGGER.error("配置文件读取失败，请检查文件名：" + filename);
             LOGGER.error(e.getMessage());
         }
     }

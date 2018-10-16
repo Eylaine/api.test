@@ -8,6 +8,51 @@
     <artifactId>api.test</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <!--多环境配置-->
+    <profiles>
+        <profile>
+            <id>alpha</id>
+            <!-- alpha环境 -->
+            <properties>
+                <profiles.active>alpha</profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>ar</id>
+            <!-- ar环境 -->
+            <properties>
+                <profiles.active>ar</profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <!-- 生产环境：默认 -->
+            <properties>
+                <profiles.active>prod</profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- 第一节点：扫描配置文件 -->
+                <includes>
+                    <include>alpha/*.properties</include>
+                    <include>prod/*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <!-- 第二节点：指定配置文件目录 -->
+                <directory>src/main/resources/${profiles.active}</directory>
+            </resource>
+        </resources>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
