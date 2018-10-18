@@ -32,6 +32,21 @@ public class PropUtil {
     }
 
     /**
+     * 构造方法，初始化Properties对象
+     * @param filename string
+     */
+    public PropUtil(String filename) {
+        properties = new Properties();
+
+        try {
+            properties.load(FileUtil.readFileToInputStream(filename));
+        } catch (IOException e) {
+            properties = null;
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    /**
      * 获取配置文件内容
      * @param key key
      * @return String

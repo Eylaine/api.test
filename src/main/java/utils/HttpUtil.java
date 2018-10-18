@@ -14,6 +14,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import testcase.TcConf;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -28,11 +29,10 @@ import java.util.Map;
  * User: Eylaine
  */
 public class HttpUtil {
+
     private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     private HttpClient httpClient;
-    private HttpGet httpGet;
-    private HttpPost httpPost;
     private HttpResponse httpResponse;
 
     public HttpUtil() {
@@ -47,7 +47,7 @@ public class HttpUtil {
      */
     public ResInfo get(String url, Map<String, String> headers) {
 
-        httpGet = new HttpGet(url);
+        HttpGet httpGet = new HttpGet(TcConf.DOMAIN + url);
 
         if (null != headers && headers.size() > 0) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -96,7 +96,8 @@ public class HttpUtil {
      * @return
      */
     public ResInfo post(String url, Map<String, String> headers, Map<String, String> params) {
-        httpPost = new HttpPost(url);
+
+        HttpPost httpPost = new HttpPost(TcConf.DOMAIN + url);
 
         if (null != headers && headers.size() > 0) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {

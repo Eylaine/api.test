@@ -3,3 +3,4 @@ output/
 target/
 api.test.iml
 src/test/
+allure-results/
