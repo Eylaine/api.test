@@ -3,7 +3,7 @@
 <suite name="test" verbose="1">
     <test name="LOGIN" >
         <classes>
-            <class name="testcase.eus.LoginByPwd"/>
+            <class name="testcase.github.User"/>
         </classes>
     </test>
 </suite>
