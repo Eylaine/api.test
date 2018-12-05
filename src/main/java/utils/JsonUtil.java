@@ -76,9 +76,9 @@ public class JsonUtil {
                     al.add(jtwo.getString(i));
                 }
                 break;
-             default:
-                 LOGGER.error("嵌套太深，暂不支持：" + key);
-                 break;
+            default:
+                LOGGER.error("嵌套太深，暂不支持：" + key);
+                break;
         }
 
         return al;
