@@ -20,7 +20,7 @@ public class TcConf {
      * @return domain
      */
     private static String getDomain() {
-        PropUtil propUtil = new PropUtil();
+        PropUtil propUtil = PropUtil.getPropUtil();
         LOGGER.info("读取配置文件中的：domain");
         return propUtil.getValue("domain");
     }

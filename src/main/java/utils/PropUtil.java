@@ -17,10 +17,12 @@ public class PropUtil {
 
     private Properties properties;
 
+    private static volatile PropUtil propUtil = null;
+
     /**
      * 构造方法，初始化Properties对象
      */
-    public PropUtil() {
+    private PropUtil() {
         properties = new Properties();
 
         try {
@@ -29,6 +31,22 @@ public class PropUtil {
             properties = null;
             LOGGER.error(e.getMessage());
         }
+    }
+
+    /**
+     * 单例模式，不需要重复创建PropUtil实例
+     * @return PropUtil
+     */
+    public static PropUtil getPropUtil() {
+        if (propUtil == null) {
+            synchronized (PropUtil.class) {
+                if (propUtil == null) {
+                    propUtil = new PropUtil();
+                }
+            }
+        }
+
+        return propUtil;
     }
 
     /**
@@ -54,7 +72,7 @@ public class PropUtil {
     public String getValue(String key) {
         String value = properties.getProperty(key);
 
-        if (value == null || value.equals("")) {
+        if (value == null || "".equals(value)) {
             LOGGER.error("未获取到对应的value，请检查key：" + key);
             return "";
         }

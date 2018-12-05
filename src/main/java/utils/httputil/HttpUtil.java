@@ -1,15 +1,18 @@
-package utils;
+package utils.httputil;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.AbstractHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -25,18 +28,36 @@ import java.util.Map;
 
 /**
  * Description: Http请求工具类
+ * 单例模式，使用同一个HttpClient。目的：保持会话
  * Date: 2018/9/30
  * User: Eylaine
  */
 public class HttpUtil {
 
-    private Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private HttpClient httpClient;
-    private HttpResponse httpResponse;
+    private CloseableHttpClient httpClient;
+    private CloseableHttpResponse httpResponse;
+    private static CookieStore cookies;
 
-    public HttpUtil() {
-        httpClient = new DefaultHttpClient();
+    private static volatile HttpUtil httpUtil = null;
+
+    private HttpUtil() {
+        PoolingHttpClientConnectionManager pccm = new PoolingHttpClientConnectionManager();
+        pccm.setMaxTotal(100);
+        httpClient = HttpClients.custom().setConnectionManager(pccm).build();
+    }
+
+    public static HttpUtil getHttpUtil() {
+
+        if (httpUtil == null) {
+            synchronized (HttpUtil.class) {
+                if (httpUtil == null) {
+                    httpUtil = new HttpUtil();
+                }
+            }
+        }
+        return httpUtil;
     }
 
     /**
@@ -75,11 +96,11 @@ public class HttpUtil {
     private ResInfo get(HttpGet httpGet) {
         ResInfo resInfo = new ResInfo();
         try {
-            LOGGER.info("开始发送get请求：" + httpGet.getURI());
+            logger.info("开始发送get请求：" + httpGet.getURI());
             httpResponse = httpClient.execute(httpGet);
         } catch (Exception e) {
-            LOGGER.error("get请求执行失败：");
-            LOGGER.error(e.getMessage());
+            logger.error("get请求执行失败：");
+            logger.error(e.getMessage());
         }
         resInfo.setResCode(httpResponse.getStatusLine().getStatusCode());
         resInfo.setResBody(getBody(httpResponse));
@@ -112,8 +133,8 @@ public class HttpUtil {
                 try {
                     httpPost.setEntity(new UrlEncodedFormEntity(temp, "utf-8"));
                 } catch (UnsupportedEncodingException e) {
-                    LOGGER.error("请求参数设置异常：");
-                    LOGGER.error(e.getMessage());
+                    logger.error("请求参数设置异常：");
+                    logger.error(e.getMessage());
                 }
             }
         }
@@ -137,20 +158,20 @@ public class HttpUtil {
      * @return
      */
     private ResInfo post(HttpPost httpPost) {
-        HttpResponse response;
+//        CloseableHttpResponse response;
         try {
-            LOGGER.info("发送Post请求：" + httpPost.getURI());
-            response = httpClient.execute(httpPost);
+            logger.info("发送Post请求：" + httpPost.getURI());
+            httpResponse = httpClient.execute(httpPost);
         } catch (Exception e) {
-            LOGGER.error("post请求执行异常");
-            LOGGER.error(e.getMessage());
-            response = null;
+            logger.error("post请求执行异常");
+            logger.error(e.getMessage());
+            httpResponse = null;
         }
 
         ResInfo resInfo = new ResInfo();
 //        resInfo.setResHeader(getHeader(response));
-        resInfo.setResCode(response.getStatusLine().getStatusCode());
-        resInfo.setResBody(getBody(response));
+        resInfo.setResCode(httpResponse.getStatusLine().getStatusCode());
+        resInfo.setResBody(getBody(httpResponse));
         resInfo.setCookies(getCookies());
 
         return resInfo;
@@ -162,19 +183,21 @@ public class HttpUtil {
      * @return
      * @throws IOException
      */
-    private String getBody(HttpResponse response) {
+    private String getBody(CloseableHttpResponse response) {
         String strResult = "";
 
-        if (null == response) return "";
+        if (null == response) {
+            return "";
+        }
 
         HttpEntity httpEntity = response.getEntity();
 
         try {
-            LOGGER.info("获取响应的Body：");
+            logger.info("获取响应的Body：");
             strResult = EntityUtils.toString(httpEntity);
         } catch (IOException e) {
-            LOGGER.error("获取Body信息失败");
-            LOGGER.error(e.getMessage());
+            logger.error("获取Body信息失败");
+            logger.error(e.getMessage());
         }
 
         return strResult;
@@ -186,7 +209,7 @@ public class HttpUtil {
      * @return
      */
     private Map<String, String> getHeader(HttpResponse response) {
-        Map<String, String> resHeader = new HashMap<String, String>();
+        Map<String, String> resHeader = new HashMap<>(16);
 
         Header[] headers = response.getAllHeaders();
 
@@ -202,8 +225,8 @@ public class HttpUtil {
      */
     private Map<String, String> getCookies() {
 //        StringBuilder sb = new StringBuilder();
-        LOGGER.info("获取响应的Cookies：");
-        Map<String, String> cookieMap = new HashMap<String, String>();
+        logger.info("获取响应的Cookies：");
+        Map<String, String> cookieMap = new HashMap<>(16);
 
         List<Cookie> cookies = ((AbstractHttpClient)httpClient).getCookieStore().getCookies();
 
