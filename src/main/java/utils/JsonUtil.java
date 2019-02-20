@@ -10,6 +10,7 @@ import java.util.ArrayList;
 /**
  * Description: 解析Json字符串，返回Map
  * Date: 2018/10/22
+ *
  * @author : Eylaine
  */
 public class JsonUtil {
@@ -18,6 +19,7 @@ public class JsonUtil {
 
     /**
      * 从Json串中读取value，目前只支持三层json嵌套
+     *
      * @param str 源字符串
      * @param key 格式eg：a.b.c
      * @return 返回字符串
@@ -51,6 +53,7 @@ public class JsonUtil {
 
     /**
      * 从Json串中读取List，目前只支持三层json嵌套
+     *
      * @param str 源字符串
      * @param key 格式eg：a.b，c
      * @return

@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 /**
  * Description: Excel文件读工具类，只支持2007及以后版本
  * Date: 2018/10/23
+ *
  * @author : Eylaine
  */
 public class ExcelUtil {
@@ -26,6 +27,7 @@ public class ExcelUtil {
 
     /**
      * 默认第一个Sheet
+     *
      * @param filename
      */
     public ExcelUtil(String filename) {
@@ -36,6 +38,7 @@ public class ExcelUtil {
 
     /**
      * 构造方法
+     *
      * @param filename
      * @param index
      */
@@ -47,6 +50,7 @@ public class ExcelUtil {
 
     /**
      * 构造方法
+     *
      * @param filename
      * @param sheetName
      */
@@ -67,6 +71,7 @@ public class ExcelUtil {
 
     /**
      * sheet序号
+     *
      * @param index
      */
     public void setSheet(int index) {
@@ -75,6 +80,7 @@ public class ExcelUtil {
 
     /**
      * sheet名称
+     *
      * @param sheetName
      */
     public void setSheet(String sheetName) {
@@ -87,6 +93,7 @@ public class ExcelUtil {
 
     /**
      * 获取总行数
+     *
      * @return
      */
     public int getRowNum() {
@@ -95,6 +102,7 @@ public class ExcelUtil {
 
     /**
      * 获取总列数
+     *
      * @return
      */
     public int getColNum() {
@@ -116,6 +124,7 @@ public class ExcelUtil {
 
     /**
      * 获取第几行的数据
+     *
      * @param index
      * @return
      */
@@ -125,6 +134,7 @@ public class ExcelUtil {
 
     /**
      * 获取单元格的值
+     *
      * @param rowIndex
      * @param colIndex
      * @return
@@ -151,10 +161,10 @@ public class ExcelUtil {
                 result = Boolean.toString(value);
                 break;
             case NUMERIC:
-                if (DateUtil.isCellDateFormatted(cell)){
+                if (DateUtil.isCellDateFormatted(cell)) {
                     result = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cell.getDateCellValue());
-                }else{
-                    BigDecimal bd =  new BigDecimal(cell.getNumericCellValue());
+                } else {
+                    BigDecimal bd = new BigDecimal(cell.getNumericCellValue());
                     String str = bd.toString();
                     if (str.contains(".0")) {
                         str = str.replace(".0", "");

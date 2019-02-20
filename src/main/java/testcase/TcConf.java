@@ -17,6 +17,7 @@ public class TcConf {
 
     /**
      * 读取服务器的domain（域名）
+     *
      * @return domain
      */
     private static String getDomain() {

@@ -16,6 +16,7 @@ public class Common {
 
     /**
      * 检查http状态码
+     *
      * @param statusCode int
      * @return True or False
      */

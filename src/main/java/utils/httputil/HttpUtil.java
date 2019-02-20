@@ -62,6 +62,7 @@ public class HttpUtil {
 
     /**
      * 带header的get请求
+     *
      * @param url
      * @param headers
      * @return
@@ -81,6 +82,7 @@ public class HttpUtil {
 
     /**
      * 不带header的get请求
+     *
      * @param url
      * @return
      */
@@ -90,6 +92,7 @@ public class HttpUtil {
 
     /**
      * 对内get请求，真正发送请求
+     *
      * @param httpGet
      * @return
      */
@@ -110,7 +113,6 @@ public class HttpUtil {
     }
 
     /**
-     *
      * @param url
      * @param headers
      * @param params
@@ -143,7 +145,6 @@ public class HttpUtil {
     }
 
     /**
-     *
      * @param url
      * @param params
      * @return
@@ -154,6 +155,7 @@ public class HttpUtil {
 
     /**
      * 对内post请求，真正发送请求
+     *
      * @param httpPost
      * @return
      */
@@ -179,6 +181,7 @@ public class HttpUtil {
 
     /**
      * 从响应中获取body
+     *
      * @param response
      * @return
      * @throws IOException
@@ -205,6 +208,7 @@ public class HttpUtil {
 
     /**
      * 从响应中获取header
+     *
      * @param response
      * @return
      */
@@ -221,6 +225,7 @@ public class HttpUtil {
 
     /**
      * 获取返回结果中的cookies信息
+     *
      * @return
      */
     private Map<String, String> getCookies() {
@@ -228,7 +233,7 @@ public class HttpUtil {
         logger.info("获取响应的Cookies：");
         Map<String, String> cookieMap = new HashMap<>(16);
 
-        List<Cookie> cookies = ((AbstractHttpClient)httpClient).getCookieStore().getCookies();
+        List<Cookie> cookies = ((AbstractHttpClient) httpClient).getCookieStore().getCookies();
 
         for (Cookie cookie : cookies) {
 //            sb.append(cookie.getName() + "=" + cookie.getValue() + ";");

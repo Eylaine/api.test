@@ -35,6 +35,7 @@ public class PropUtil {
 
     /**
      * 单例模式，不需要重复创建PropUtil实例
+     *
      * @return PropUtil
      */
     public static PropUtil getPropUtil() {
@@ -51,6 +52,7 @@ public class PropUtil {
 
     /**
      * 构造方法，初始化Properties对象
+     *
      * @param filename string
      */
     public PropUtil(String filename) {
@@ -66,6 +68,7 @@ public class PropUtil {
 
     /**
      * 获取配置文件内容
+     *
      * @param key key
      * @return String
      */
