@@ -1,6 +1,7 @@
 package testcase.cases;
 
 import org.testng.annotations.Test;
+import utils.StringUtil;
 
 import java.util.Map;
 
@@ -15,6 +16,5 @@ public class CaseExample {
     @Test
     public void queryModuleContent() {
         String url = "/lego/query_module_content";
-        Map<String, String> params =
     }
 }

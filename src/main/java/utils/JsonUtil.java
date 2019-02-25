@@ -1,7 +1,7 @@
 package utils;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ public class JsonUtil {
      * @return 返回字符串
      */
     public static String getValue(String str, String key) {
-        JSONObject json = JSONObject.fromObject(str);
+        JSONObject json = JSONObject.parseObject(str);
         String[] sk = key.split("\\.");
         int num = sk.length;
         String result = "";
@@ -59,7 +59,7 @@ public class JsonUtil {
      * @return
      */
     public static ArrayList<String> getArrayList(String str, String key) {
-        JSONObject json = JSONObject.fromObject(str);
+        JSONObject json = JSONObject.parseObject(str);
         String[] sk = key.split("\\.");
         int num = sk.length;
 
