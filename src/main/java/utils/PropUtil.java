@@ -21,6 +21,7 @@ public class PropUtil {
 
     /**
      * 构造方法，初始化Properties对象
+     * 读取默认配置文件配置：config.properties
      */
     private PropUtil() {
         properties = new Properties();
@@ -52,7 +53,7 @@ public class PropUtil {
 
     /**
      * 构造方法，初始化Properties对象
-     *
+     * 读取指定文件配置
      * @param filename string
      */
     public PropUtil(String filename) {
