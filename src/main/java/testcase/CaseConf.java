@@ -9,9 +9,9 @@ import utils.PropUtil;
  * Date: 2018/9/30
  * User: Eylaine
  */
-public class TcConf {
+public class CaseConf {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(TcConf.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(CaseConf.class);
 
     public static String DOMAIN = getDomain();
 

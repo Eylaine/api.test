@@ -30,4 +30,12 @@ public class FileUtil {
             return null;
         }
     }
+
+    /**
+     * 删除目录下的测试用例文件
+     * @return
+     */
+    public static Boolean deleteTestCase() {
+        return false;
+    }
 }

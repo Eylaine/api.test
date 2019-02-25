@@ -17,7 +17,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import testcase.TcConf;
+import testcase.CaseConf;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -69,7 +69,7 @@ public class HttpUtil {
      */
     public ResInfo get(String url, Map<String, String> headers) {
 
-        HttpGet httpGet = new HttpGet(TcConf.DOMAIN + url);
+        HttpGet httpGet = new HttpGet(CaseConf.DOMAIN + url);
 
         if (null != headers && headers.size() > 0) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -120,7 +120,7 @@ public class HttpUtil {
      */
     public ResInfo post(String url, Map<String, String> headers, Map<String, String> params) {
 
-        HttpPost httpPost = new HttpPost(TcConf.DOMAIN + url);
+        HttpPost httpPost = new HttpPost(CaseConf.DOMAIN + url);
 
         if (null != headers && headers.size() > 0) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
