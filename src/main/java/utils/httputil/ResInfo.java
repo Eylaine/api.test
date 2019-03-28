@@ -3,7 +3,7 @@ package utils.httputil;
 import java.util.Map;
 
 /**
- * Description:
+ * Description: 接收Http请求返回的实体类
  * Date: 2018/10/2
  * User: Eylaine
  */

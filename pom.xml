@@ -34,7 +34,9 @@
                 <!-- 第一节点：扫描配置文件 -->
                 <includes>
                     <include>beta/*.properties</include>
+                    <include>beta/*.yaml</include>
                     <include>prod/*.properties</include>
+                    <include>prod/*.yaml</include>
                     <include>*.properties</include>
                 </includes>
             </resource>
@@ -132,6 +134,11 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.56</version>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.23</version>
         </dependency>
     </dependencies>
 

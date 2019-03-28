@@ -7,7 +7,7 @@ import utils.httputil.ResInfo;
 import java.util.Map;
 
 /**
- * Description:
+ * Description: 通用工具类
  * Date: 2018/11/19
  *
  * @author: Eylaine
