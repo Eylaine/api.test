@@ -136,6 +136,26 @@ public class JsonUtil {
     }
 
     /**
+     * large Json串是否包含small Json串
+     * 并比较包含的key所对应的value
+     * @param large
+     * @param small
+     * @return
+     */
+    //unchecked
+    public static boolean contains(String large, String small) {
+
+        if (null == large) {
+            return null == small;
+        }
+
+        JsonElement eLarge = jsonParser.parse(large);
+        JsonElement eSmall = jsonParser.parse(small);
+
+        return contains(eLarge, eSmall);
+    }
+
+    /**
      * 比较json数组
      * @param aa
      * @param ab
@@ -152,6 +172,31 @@ public class JsonUtil {
 
         for (int i = 0; i < la.size(); i++) {
             if (!compare(la.get(i), lb.get(i))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     *
+     * @param aa
+     * @param ab
+     * @return
+     */
+    private static boolean contains(JsonArray aa, JsonArray ab) {
+
+        if (aa.size() < ab.size()) {
+            return false;
+        }
+
+//        List<JsonElement> la = sortList(aa);
+//        List<JsonElement> lb = sortList(ab);
+
+        for (JsonElement je: ab) {
+
+            if (!aa.toString().contains(je.toString())) {
                 return false;
             }
         }
@@ -195,6 +240,60 @@ public class JsonUtil {
     }
 
     /**
+     * 判断joa是否包含job
+     * 1、判断job的keySet是否在joa中
+     * 2、比较相同key的值是否相等
+     * @param joa
+     * @param job
+     * @return
+     */
+    private static boolean contains(JsonObject joa, JsonObject job) {
+        Set<String> bSet = job.keySet();
+        Set<String> aSet = joa.keySet();
+
+        if (!aSet.containsAll(bSet)) {
+            return false;
+        } else if (aSet.containsAll(bSet)) {
+            for (String bKey: bSet) {
+                if (!compare(joa.get(bKey), job.get(bKey))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * 比较Json对象，部分字段不比较
+     * Json串集合大的在前
+     * @param joa
+     * @param job destination
+     * @param exclude 排除字段的List
+     * @return
+     */
+    public static boolean compare(JsonObject joa, JsonObject job, List<String> exclude) {
+
+        Set<String> aSet = joa.keySet();
+//        Set<String> bSet = job.keySet();
+//
+//        if (!aSet.equals(bSet)) {
+//            return false;
+//        }
+
+        for (String aKey: aSet) {
+
+            if (!exclude.contains(aKey)) {
+                if (!compare(joa.get(aKey), job.get(aKey))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      *
      * @param pa
      * @param pb
@@ -219,6 +318,25 @@ public class JsonUtil {
         } else if (ea.isJsonPrimitive() && eb.isJsonPrimitive()) {
             return compare((JsonPrimitive)ea, (JsonPrimitive)eb);
         } else return ea.isJsonNull() && eb.isJsonNull();
+    }
+
+    /**
+     *
+     * @param eLarge
+     * @param eSmall
+     * @return
+     */
+    private static boolean contains(JsonElement eLarge, JsonElement eSmall) {
+
+        if (eLarge.isJsonObject() && eSmall.isJsonObject()) {
+            return contains((JsonObject)eLarge, (JsonObject)eSmall);
+        } else if (eLarge.isJsonArray() && eSmall.isJsonArray()) {
+            return contains((JsonArray)eLarge, (JsonArray)eSmall);
+        } else {
+            LOGGER.error(eLarge.getClass() + " 类型不能比较 " + eSmall.getClass());
+            return false;
+        }
+
     }
 
 }
