@@ -34,30 +34,36 @@ import java.util.Map;
  */
 public class HttpUtil {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
     private CloseableHttpClient httpClient;
     private CloseableHttpResponse httpResponse;
-    private static CookieStore cookies;
+//    private static CookieStore cookies;
 
-    private static volatile HttpUtil httpUtil = null;
+//    private static volatile HttpUtil httpUtil = null;
 
-    private HttpUtil() {
+//    private HttpUtil() {
+//        PoolingHttpClientConnectionManager pccm = new PoolingHttpClientConnectionManager();
+//        pccm.setMaxTotal(100);
+//        httpClient = HttpClients.custom().setConnectionManager(pccm).build();
+//    }
+
+//    public static HttpUtil getHttpUtil() {
+//
+//        if (httpUtil == null) {
+//            synchronized (HttpUtil.class) {
+//                if (httpUtil == null) {
+//                    httpUtil = new HttpUtil();
+//                }
+//            }
+//        }
+//        return httpUtil;
+//    }
+
+    public HttpUtil() {
         PoolingHttpClientConnectionManager pccm = new PoolingHttpClientConnectionManager();
         pccm.setMaxTotal(100);
         httpClient = HttpClients.custom().setConnectionManager(pccm).build();
-    }
-
-    public static HttpUtil getHttpUtil() {
-
-        if (httpUtil == null) {
-            synchronized (HttpUtil.class) {
-                if (httpUtil == null) {
-                    httpUtil = new HttpUtil();
-                }
-            }
-        }
-        return httpUtil;
     }
 
     /**
@@ -69,7 +75,7 @@ public class HttpUtil {
      */
     public ResInfo get(String url, Map<String, String> headers) {
 
-        HttpGet httpGet = new HttpGet(CaseConf.DOMAIN + url);
+        HttpGet httpGet = new HttpGet(url);
 
         if (null != headers && headers.size() > 0) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -107,8 +113,8 @@ public class HttpUtil {
         }
         resInfo.setResCode(httpResponse.getStatusLine().getStatusCode());
         resInfo.setResBody(getBody(httpResponse));
-//        resInfo.setResHeader(getHeader(httpResponse));
-        resInfo.setCookies(getCookies());
+        resInfo.setResHeader(getHeader(httpResponse));
+//        resInfo.setCookies(getCookies());
         return resInfo;
     }
 
@@ -120,7 +126,7 @@ public class HttpUtil {
      */
     public ResInfo post(String url, Map<String, String> headers, Map<String, String> params) {
 
-        HttpPost httpPost = new HttpPost(CaseConf.DOMAIN + url);
+        HttpPost httpPost = new HttpPost(url);
 
         if (null != headers && headers.size() > 0) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -129,7 +135,7 @@ public class HttpUtil {
         }
 
         if (null != params && params.size() > 0) {
-            List<BasicNameValuePair> temp = new ArrayList<BasicNameValuePair>();
+            List<BasicNameValuePair> temp = new ArrayList<>();
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 temp.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
                 try {
@@ -171,10 +177,10 @@ public class HttpUtil {
         }
 
         ResInfo resInfo = new ResInfo();
-//        resInfo.setResHeader(getHeader(response));
+        resInfo.setResHeader(getHeader(httpResponse));
         resInfo.setResCode(httpResponse.getStatusLine().getStatusCode());
         resInfo.setResBody(getBody(httpResponse));
-        resInfo.setCookies(getCookies());
+//        resInfo.setCookies(getCookies());
 
         return resInfo;
     }
@@ -190,6 +196,7 @@ public class HttpUtil {
         String strResult = "";
 
         if (null == response) {
+            logger.error("response为空！");
             return "";
         }
 
@@ -214,6 +221,11 @@ public class HttpUtil {
      */
     private Map<String, String> getHeader(HttpResponse response) {
         Map<String, String> resHeader = new HashMap<>(16);
+
+        if (null == response) {
+            logger.error("response为空！");
+            return resHeader;
+        }
 
         Header[] headers = response.getAllHeaders();
 
@@ -242,4 +254,5 @@ public class HttpUtil {
 
         return cookieMap;
     }
+
 }

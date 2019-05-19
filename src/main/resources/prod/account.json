@@ -1,0 +1,14 @@
+{
+  "common": {
+    "username": "",
+    "password": "",
+    "userId": "",
+    "sid": ""
+  },
+  "vip": {
+    "username": "",
+    "password": "",
+    "userId": "",
+    "sid": ""
+  }
+}
