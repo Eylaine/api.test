@@ -7,6 +7,9 @@ import keyword.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -15,7 +18,6 @@ import java.util.Set;
 /**
  * Description: 解析Json字符串，返回Map
  * Date: 2018/10/22
- *
  * @author : Eylaine
  */
 public class JsonUtil {
@@ -26,8 +28,23 @@ public class JsonUtil {
     private static JsonParser jsonParser = new JsonParser();
 
     /**
+     * 读取Json文件为String
+     * @param filename 文件名
+     * @return 字符串
+     */
+    public static String readToString(String filename) {
+
+        try {
+            FileInputStream fis = new FileInputStream(filename);
+            BufferedReader buffer = new BufferedReader();
+        } catch (FileNotFoundException e) {
+            LOGGER.error(e.getMessage());
+            LOGGER.error("文件读取失败，请检查文件路径：" + filename);
+        }
+    }
+
+    /**
      * 从Json串中读取value，目前只支持三层json嵌套
-     *
      * @param str 源字符串
      * @param key 格式eg：a.b.c
      * @return 返回字符串

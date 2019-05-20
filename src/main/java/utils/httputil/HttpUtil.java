@@ -34,14 +34,12 @@ import java.util.Map;
  */
 public class HttpUtil {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
     private CloseableHttpClient httpClient;
     private CloseableHttpResponse httpResponse;
     private BasicCookieStore cookieStore = new BasicCookieStore();
 
-//    private static volatile HttpUtil httpUtil = null;
-//
 //    private HttpUtil() {
 //        PoolingHttpClientConnectionManager pccm = new PoolingHttpClientConnectionManager();
 //        pccm.setMaxTotal(100);
@@ -75,7 +73,7 @@ public class HttpUtil {
      */
     public ResInfo get(String url, Map<String, String> headers) {
 
-        HttpGet httpGet = new HttpGet(CaseConf.DOMAIN + url);
+        HttpGet httpGet = new HttpGet(url);
 
         if (null != headers && headers.size() > 0) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -126,7 +124,7 @@ public class HttpUtil {
      */
     public ResInfo post(String url, Map<String, String> headers, Map<String, String> params) {
 
-        HttpPost httpPost = new HttpPost(CaseConf.DOMAIN + url);
+        HttpPost httpPost = new HttpPost(url);
 
         if (null != headers && headers.size() > 0) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
@@ -135,7 +133,7 @@ public class HttpUtil {
         }
 
         if (null != params && params.size() > 0) {
-            List<BasicNameValuePair> temp = new ArrayList<BasicNameValuePair>();
+            List<BasicNameValuePair> temp = new ArrayList<>();
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 temp.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
                 try {
@@ -196,6 +194,7 @@ public class HttpUtil {
         String strResult = "";
 
         if (null == response) {
+            logger.error("response为空！");
             return "";
         }
 
@@ -221,6 +220,11 @@ public class HttpUtil {
     private Map<String, String> getHeader(HttpResponse response) {
         Map<String, String> resHeader = new HashMap<>(16);
 
+        if (null == response) {
+            logger.error("response为空！");
+            return resHeader;
+        }
+
         Header[] headers = response.getAllHeaders();
 
         for (Header header : headers) {
@@ -244,4 +248,5 @@ public class HttpUtil {
 
         return result;
     }
+
 }
