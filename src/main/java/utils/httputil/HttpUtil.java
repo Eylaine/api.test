@@ -9,7 +9,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.AbstractHttpClient;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -38,26 +38,32 @@ public class HttpUtil {
 
     private CloseableHttpClient httpClient;
     private CloseableHttpResponse httpResponse;
-    private static CookieStore cookies;
+    private BasicCookieStore cookieStore = new BasicCookieStore();
 
-    private static volatile HttpUtil httpUtil = null;
+//    private static volatile HttpUtil httpUtil = null;
+//
+//    private HttpUtil() {
+//        PoolingHttpClientConnectionManager pccm = new PoolingHttpClientConnectionManager();
+//        pccm.setMaxTotal(100);
+//        httpClient = HttpClients.custom().setConnectionManager(pccm).build();
+//    }
+//
+//    public static HttpUtil getHttpUtil() {
+//
+//        if (httpUtil == null) {
+//            synchronized (HttpUtil.class) {
+//                if (httpUtil == null) {
+//                    httpUtil = new HttpUtil();
+//                }
+//            }
+//        }
+//        return httpUtil;
+//    }
 
-    private HttpUtil() {
+    public HttpUtil() {
         PoolingHttpClientConnectionManager pccm = new PoolingHttpClientConnectionManager();
         pccm.setMaxTotal(100);
-        httpClient = HttpClients.custom().setConnectionManager(pccm).build();
-    }
-
-    public static HttpUtil getHttpUtil() {
-
-        if (httpUtil == null) {
-            synchronized (HttpUtil.class) {
-                if (httpUtil == null) {
-                    httpUtil = new HttpUtil();
-                }
-            }
-        }
-        return httpUtil;
+        httpClient = HttpClients.custom().setConnectionManager(pccm).setDefaultCookieStore(cookieStore).build();
     }
 
     /**
@@ -107,7 +113,7 @@ public class HttpUtil {
         }
         resInfo.setResCode(httpResponse.getStatusLine().getStatusCode());
         resInfo.setResBody(getBody(httpResponse));
-//        resInfo.setResHeader(getHeader(httpResponse));
+        resInfo.setResHeader(getHeader(httpResponse));
         resInfo.setCookies(getCookies());
         return resInfo;
     }
@@ -171,7 +177,7 @@ public class HttpUtil {
         }
 
         ResInfo resInfo = new ResInfo();
-//        resInfo.setResHeader(getHeader(response));
+        resInfo.setResHeader(getHeader(httpResponse));
         resInfo.setResCode(httpResponse.getStatusLine().getStatusCode());
         resInfo.setResBody(getBody(httpResponse));
         resInfo.setCookies(getCookies());
@@ -229,17 +235,13 @@ public class HttpUtil {
      * @return
      */
     private Map<String, String> getCookies() {
-//        StringBuilder sb = new StringBuilder();
-        logger.info("获取响应的Cookies：");
-        Map<String, String> cookieMap = new HashMap<>(16);
-
-        List<Cookie> cookies = ((AbstractHttpClient) httpClient).getCookieStore().getCookies();
+        Map<String, String> result = new HashMap<>();
+        List<Cookie> cookies = cookieStore.getCookies();
 
         for (Cookie cookie : cookies) {
-//            sb.append(cookie.getName() + "=" + cookie.getValue() + ";");
-            cookieMap.put(cookie.getName(), cookie.getValue());
+            result.put(cookie.getName(), cookie.getValue());
         }
 
-        return cookieMap;
+        return result;
     }
 }

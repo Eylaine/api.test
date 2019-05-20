@@ -3,6 +3,7 @@ package utils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.*;
+import keyword.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +57,33 @@ public class JsonUtil {
         }
 
         return result;
+    }
+
+    public static List<String> jsonToList(String str) {
+        List<String> result = new ArrayList<>();
+
+        JsonArray jsonArray = (JsonArray)jsonParser.parse(str);
+
+        for (JsonElement e : jsonArray) {
+            result.add(e.toString());
+        }
+
+        return result;
+    }
+
+    /**
+     * 根绝账号类型，获取sid
+     * @param index: 0 是通用账号, 1 是vip账号
+     * @return
+     */
+    public static String getSid(int index) {
+        FileUtil fu = new FileUtil();
+        Gson gson = new Gson();
+
+        List<String> data = JsonUtil.jsonToList(fu.readAsResources("/account.json"));
+        String temp = data.get(index);
+        Account account = gson.fromJson(temp, Account.class);
+        return account.getSid();
     }
 
     /**

@@ -32,6 +32,9 @@ Cookie解决方案：
 
 TODO：
 1、运行参数定制化
+2、Jenkins API封装
+3、发送邮件通知代码
+4、邮件通知内容优化
 
 改造重构：
 1、模板引擎，根据Excel文件生成TestCase的Java文件
