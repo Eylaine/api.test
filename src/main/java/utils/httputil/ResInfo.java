@@ -9,11 +9,7 @@ import java.util.Map;
  */
 public class ResInfo {
     private int resCode;
-<<<<<<< HEAD
-        private Map<String, String> resHeader;
-=======
     private Map<String, String> resHeader;
->>>>>>> 8d312f2
     private String resBody;
     private Map<String, String> cookies;
 
