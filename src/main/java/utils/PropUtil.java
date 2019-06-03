@@ -36,7 +36,6 @@ public class PropUtil {
 
     /**
      * 单例模式，不需要重复创建PropUtil实例
-     *
      * @return PropUtil
      */
     public static PropUtil getPropUtil() {

@@ -16,7 +16,6 @@ public class FileUtil {
 
     /**
      * 字节流读取文件
-     *
      * @param filename 文件名/路径
      * @return 返回字节流
      */

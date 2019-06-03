@@ -38,24 +38,6 @@ public class HttpUtil {
     private CloseableHttpResponse httpResponse;
     private BasicCookieStore cookieStore = new BasicCookieStore();
 
-//    private HttpUtil() {
-//        PoolingHttpClientConnectionManager pccm = new PoolingHttpClientConnectionManager();
-//        pccm.setMaxTotal(100);
-//        httpClient = HttpClients.custom().setConnectionManager(pccm).build();
-//    }
-//
-//    public static HttpUtil getHttpUtil() {
-//
-//        if (httpUtil == null) {
-//            synchronized (HttpUtil.class) {
-//                if (httpUtil == null) {
-//                    httpUtil = new HttpUtil();
-//                }
-//            }
-//        }
-//        return httpUtil;
-//    }
-
     public HttpUtil() {
         PoolingHttpClientConnectionManager pccm = new PoolingHttpClientConnectionManager();
         pccm.setMaxTotal(100);
@@ -162,7 +144,6 @@ public class HttpUtil {
      * @return
      */
     private ResInfo post(HttpPost httpPost) {
-//        CloseableHttpResponse response;
         try {
             logger.info("发送Post请求：" + httpPost.getURI());
             httpResponse = httpClient.execute(httpPost);
@@ -211,7 +192,6 @@ public class HttpUtil {
 
     /**
      * 从响应中获取header
-     *
      * @param response
      * @return
      */
@@ -243,7 +223,6 @@ public class HttpUtil {
         for (Cookie cookie : cookies) {
             result.put(cookie.getName(), cookie.getValue());
         }
-
         return result;
     }
 

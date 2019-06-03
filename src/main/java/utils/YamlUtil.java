@@ -9,7 +9,6 @@ import java.util.Map;
 /**
  * Description: 单例模式
  * Date: 2019-02-26
- *
  * @author: Eylaine
  */
 public class YamlUtil {

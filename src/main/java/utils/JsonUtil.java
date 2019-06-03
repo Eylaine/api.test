@@ -3,13 +3,10 @@ package utils;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.*;
-import keyword.Account;
+import business.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -26,22 +23,6 @@ public class JsonUtil {
 
     private static Gson gson = new Gson();
     private static JsonParser jsonParser = new JsonParser();
-
-    /**
-     * 读取Json文件为String
-     * @param filename 文件名
-     * @return 字符串
-     */
-    public static String readToString(String filename) {
-
-        try {
-            FileInputStream fis = new FileInputStream(filename);
-            BufferedReader buffer = new BufferedReader();
-        } catch (FileNotFoundException e) {
-            LOGGER.error(e.getMessage());
-            LOGGER.error("文件读取失败，请检查文件路径：" + filename);
-        }
-    }
 
     /**
      * 从Json串中读取value，目前只支持三层json嵌套
