@@ -15,6 +15,13 @@ import java.util.Map;
 public class CommonUtil {
 
     private static Logger LOGGER = LoggerFactory.getLogger(CommonUtil.class);
+    public static String ROOTPATH = getRootPath();
+
+    private static String getRootPath() {
+        String temp = System.getProperty("user.dir");
+        temp = temp.replace("\\", "/");
+        return temp + "/";
+    }
 
     /**
      * 检查http状态码

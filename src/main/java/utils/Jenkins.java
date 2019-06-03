@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.jayway.jsonpath.JsonPath;
 import org.apache.commons.lang.StringUtils;
 import utils.httputil.HttpUtil;
 import utils.httputil.ResInfo;
@@ -19,7 +20,6 @@ import java.util.regex.Pattern;
 /**
  * Description:
  * Date: 2019-06-03
- *
  * @author: Eylaine
  */
 public class Jenkins {
@@ -147,6 +147,5 @@ public class Jenkins {
         }
 
         return result;
-
     }
 }

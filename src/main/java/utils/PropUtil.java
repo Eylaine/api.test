@@ -23,7 +23,7 @@ public class PropUtil {
      * 构造方法，初始化Properties对象
      * 读取默认配置文件配置：config.properties
      */
-    private PropUtil() {
+    public PropUtil() {
         properties = new Properties();
 
         try {
@@ -32,22 +32,6 @@ public class PropUtil {
             properties = null;
             LOGGER.error(e.getMessage());
         }
-    }
-
-    /**
-     * 单例模式，不需要重复创建PropUtil实例
-     * @return PropUtil
-     */
-    public static PropUtil getPropUtil() {
-        if (propUtil == null) {
-            synchronized (PropUtil.class) {
-                if (propUtil == null) {
-                    propUtil = new PropUtil();
-                }
-            }
-        }
-
-        return propUtil;
     }
 
     /**
@@ -68,7 +52,6 @@ public class PropUtil {
 
     /**
      * 获取配置文件内容
-     *
      * @param key key
      * @return String
      */
