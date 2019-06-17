@@ -8,6 +8,8 @@ import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
+
 /**
  * Description:
  * Date: 2019-04-04
@@ -28,7 +30,11 @@ public class SchemaUtil {
         JSONObject data = new JSONObject(new JSONTokener(str));
         JSONObject temp = null;
 
-        temp = new JSONObject(new JSONTokener(FileUtil.readFileToInputStream(filePath)));
+        try {
+            temp = new JSONObject(new JSONTokener(FileUtil.readFileToInputStream(filePath)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         Schema schema = SchemaLoader.load(temp);
 

@@ -21,7 +21,7 @@ public class CaseConf {
      * @return domain
      */
     private static String getDomain() {
-        PropUtil propUtil = PropUtil.getPropUtil();
+        PropUtil propUtil = new PropUtil();
         LOGGER.info("读取配置文件中的：domain");
         return propUtil.getValue("domain");
     }
